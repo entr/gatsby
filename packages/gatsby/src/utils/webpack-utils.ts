@@ -93,7 +93,7 @@ interface IRuleUtils {
     browsers?: string[]
     modules?: CssLoaderModuleOption
   }>
-  cssModules: RuleFactory
+  // cssModules: RuleFactory
   postcss: ContextualRuleFactory<{ overrideBrowserOptions: string[] }>
 
   eslint: (schema: GraphQLSchema) => RuleSetRule
@@ -186,7 +186,7 @@ export const createWebpackUtils = (
 
     style: (options = {}) => {
       return {
-        options,
+        options: { esModule: true, ...options },
         loader: require.resolve(`style-loader`),
       }
     },
@@ -194,23 +194,21 @@ export const createWebpackUtils = (
     miniCssExtract: (options = {}) => {
       return {
         options,
-        // use MiniCssExtractPlugin only on production builds
-        loader: PRODUCTION
-          ? MiniCssExtractPlugin.loader
-          : require.resolve(`style-loader`),
+        loader: MiniCssExtractPlugin.loader,
       }
     },
 
     css: (options = {}) => {
       return {
-        loader: isSSR
-          ? require.resolve(`css-loader/locals`)
-          : require.resolve(`css-loader`),
+        loader: require.resolve(`css-loader`),
         options: {
           sourceMap: !PRODUCTION,
-          camelCase: `dashesOnly`,
+          modules: {
+            exportOnlyLocals: isSSR ? true : false,
+            exportLocalsConvention: `dashesOnly`,
+            localIdentName: `[name]--[local]--[hash:base64:5]`,
+          },
           // https://github.com/webpack-contrib/css-loader/issues/406
-          localIdentName: `[name]--[local]--[hash:base64:5]`,
           ...options,
         },
       }
@@ -529,7 +527,10 @@ export const createWebpackUtils = (
       ]
       if (!isSSR)
         use.unshift(
-          loaders.miniCssExtract({ hmr: !PRODUCTION && !restOptions.modules })
+          PRODUCTION
+            ? loaders.miniCssExtract({ hmr: !restOptions.modules })
+            : loaders.style()
+          // loaders.miniCssExtract({ hmr: !PRODUCTION && !restOptions.modules })
         )
 
       return {
@@ -544,15 +545,15 @@ export const createWebpackUtils = (
     css.internal = makeInternalOnly(css)
     css.external = makeExternalOnly(css)
 
-    const cssModules: IRuleUtils["cssModules"] = (options): RuleSetRule => {
-      const rule = css({ ...options, modules: true })
-      delete rule.exclude
-      rule.test = /\.module\.css$/
-      return rule
-    }
+    // const cssModules: IRuleUtils["cssModules"] = (options): RuleSetRule => {
+    //   const rule = css({ ...options, modules: true })
+    //   delete rule.exclude
+    //   rule.test = /\.module\.css$/
+    //   return rule
+    // }
 
     rules.css = css
-    rules.cssModules = cssModules
+    // rules.cssModules = cssModules
   }
 
   /**

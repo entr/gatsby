@@ -318,11 +318,7 @@ module.exports = async (
           configRules = configRules.concat([rules.eslint(schema)])
         }
 
-        configRules = configRules.concat([
-          {
-            oneOf: [rules.cssModules(), rules.css()],
-          },
-        ])
+        configRules = configRules.concat([rules.css()])
 
         // RHL will patch React, replace React-DOM by React-🔥-DOM and work with fiber directly
         // It's necessary to remove the warning in console (https://github.com/gatsbyjs/gatsby/issues/11934)
@@ -347,15 +343,16 @@ module.exports = async (
 
         // prettier-ignore
         configRules = configRules.concat([
-          {
-            oneOf: [
-              rules.cssModules(),
-              {
-                ...rules.css(),
-                use: [loaders.null()],
-              },
-            ],
-          },
+          // {
+          //   oneOf: [
+          //     rules.cssModules(),
+          //     {
+          //       ...rules.css(),
+          //       use: [loaders.null()],
+          //     },
+          //   ],
+          // },
+          rules.css()
         ])
         break
 
@@ -366,11 +363,7 @@ module.exports = async (
         //
         // It's also necessary to process CSS Modules so your JS knows the
         // classNames to use.
-        configRules = configRules.concat([
-          {
-            oneOf: [rules.cssModules(), rules.css()],
-          },
-        ])
+        configRules = configRules.concat([rules.css()])
 
         break
     }

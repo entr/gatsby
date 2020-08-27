@@ -134,7 +134,7 @@ exports.onCreateWebpackConfig = (
   if (`develop` === stage) {
     cssTests.push(
       ...[
-        rules.cssModules().test,
+        // rules.cssModules().test,
         rules.css().test,
         /\.s(a|c)ss$/,
         /\.module\.s(a|c)ss$/,

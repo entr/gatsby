@@ -1376,7 +1376,7 @@ export interface WebpackRules {
   media: Function
   miscAssets: Function
   css: Function
-  cssModules: Function
+  // cssModules: Function
   postcss: Function
   [key: string]: Function
 }

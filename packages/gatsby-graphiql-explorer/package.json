@@ -28,7 +28,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@babel/runtime": "^7.10.3"
+    "@babel/runtime": "^7.10.3",
+    "style-loader": "^1.2.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.3",
@@ -41,7 +42,7 @@
     "babel-preset-gatsby-package": "^0.5.2",
     "core-js": "^3.6.5",
     "cross-env": "^5.2.1",
-    "css-loader": "^1.0.1",
+    "css-loader": "^4.2.2",
     "graphiql": "^0.17.5",
     "graphiql-code-exporter": "^2.0.8",
     "graphiql-explorer": "^0.6.2",
